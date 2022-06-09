@@ -14,6 +14,7 @@ struct Transaction: Identifiable { // Identifiable - automatically use the prope
     let date: String
     let institution: String
     let account: String
+    var merchant: String
     let amount: Double
     let type: TransactionType.RawValue // The string version.
     var categoryId: Int
@@ -22,6 +23,21 @@ struct Transaction: Identifiable { // Identifiable - automatically use the prope
     var isTransfer: Bool
     var isExpense: Bool
     var isEdited: Bool
+    
+    // Establish a computed property for the transaction date.
+    // Computed property - provides a getter and an optional setter to indirectly access other properties and values.
+    var dateParsed : Date {
+        date.dateParsed()
+    }
+    
+    // Show negative amount if debit.
+    var signedAmount: Double {
+        // Return and check TransactionType.
+        // Is the TransactionType.credit.rawValue?
+            // Return the amount unchange, if not, return amount with negative sign infront. 
+        return type == TransactionType.credit.rawValue ? amount : -amount
+        
+    }
 }
 
 // Create a user-defined data type that has fixed values.
