@@ -101,9 +101,9 @@
 				FA03F063285166B600B44DC2 /* ExpenseTrackerApp.swift */,
 				FA03F065285166B600B44DC2 /* ContentView.swift */,
 				FA03F08D28516B7B00B44DC2 /* Extensions.swift */,
+				FA03F08F285174D800B44DC2 /* TransactionModel.swift */,
 				FA03F067285166B700B44DC2 /* Assets.xcassets */,
 				FA03F069285166B700B44DC2 /* Preview Content */,
-				FA03F08F285174D800B44DC2 /* TransactionModel.swift */,
 			);
 			path = ExpenseTracker;
 			sourceTree = "<group>";
