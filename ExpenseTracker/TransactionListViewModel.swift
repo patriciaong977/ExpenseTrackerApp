@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine // for .Sink
 
 // Final class - prevents the class from being inherited. Can't be overwritten.
 // Observable object - turns the obj into a publisher and notify its state changes to refresh views.
@@ -13,6 +14,15 @@ final class TransactionListViewModel : ObservableObject {
     // @Published - allows to create observable object that automatically announce when changes occurs.
     @Published var transactions: [Transaction] = []
     
+    private var cancellables = Set<AnyCancellable>()
+    
+    // When to call the Fetch Function -> When the class is initialized.
+    init() {
+        getTransactions()
+        // Initialize the View Model when the app launches. 
+    }
+    
+    // Fetch Function
     func getTransactions() {
         // Declare a constant url. Add the url json.
         // Then check if the URL is valid or not with a guard statement.
@@ -36,8 +46,31 @@ final class TransactionListViewModel : ObservableObject {
                 // If there is no error, return data
                 return data
             }
-       // After getting the data, decode it into a data model.
+            // After getting the data, decode it into a data model.
             .decode(type: [Transaction].self, decoder: JSONDecoder())   // Requires the data model is decodable in TransactionModel.
+            // Make sure to receive the data on the main thread as it will perform updates on the UI
+            .receive(on: DispatchQueue.main)
+            // Process the data with Sink Operator. Sink has two closures.
+                // 1. receiveCompletion for handling the success or failure cases.
+                // 2. receiveValue for handling the output.
+            .sink { completion in
+                // Using a switch to handle completion cases.
+                switch completion {
+                case .failure(let error):
+                    print("Error fetching transactions:", error.localizedDescription)
+                case .finished:
+                    print("Finished fetching transactions")
+                }
+            
+            } receiveValue: { [weak self] result in         // weak self - creates a weak reference to self, prevents memory leaks.
+                // Store result in transactions array.
+                self?.transactions = result // ? - if the value becomes nil in the future.
+                // dump(self?.transactions) // To show the dump transactions
+            }
+            // Sinck supports cancellation and returns AnyCancellable. You have to store the cancellable reference to the subscriber in a set of cancellables.
+            // When the references gets deallocated, it will cancel the subscribtion and free up resources.
+            .store(in: &cancellables)
+        
     }
     
 }

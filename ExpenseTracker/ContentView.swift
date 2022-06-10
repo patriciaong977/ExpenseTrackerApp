@@ -17,6 +17,9 @@ struct ContentView: View {
                     Text("Overview")
                         .font(.title2)
                         .bold()
+                    
+                    // Transaction List
+                    RecentTransactionList()
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -36,11 +39,21 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
+    static let transactionListVM: TransactionListViewModel = {
+        // Initialize an instance of TransactionListViewModel
+        let transactionListVM = TransactionListViewModel()
+        // Push transactionListPreviewData to its transactions property
+        transactionListVM.transactions = transactionListPreviewData
+        
+        return transactionListVM
+        
+    }() // A trick to enforce a different value to the view model for the preview.
     static var previews: some View {
         Group {
             ContentView()
             ContentView()
                 .preferredColorScheme(.dark)
         }
+        .environmentObject(transactionListVM)
     }
 }
