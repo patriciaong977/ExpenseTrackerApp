@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Transaction: Identifiable { // Identifiable - automatically use the property.
+struct Transaction: Identifiable, Decodable { // Identifiable - automatically use the property.
     // Each item in this list is unique.
     // Let - constant/read-only, var - editable.
     let id: Int
