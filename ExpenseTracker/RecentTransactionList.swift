@@ -24,6 +24,8 @@ struct RecentTransactionList: View {
                 
                 // Header Link
                 NavigationLink {
+                    //Add transactionlist() as a destination view.
+                    TransactionList()
                     
                 } label: {
                     HStack(spacing: 4) {
@@ -71,9 +73,15 @@ struct RecentTransactionList_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            RecentTransactionList()
+            // Can add navigation view here to show "see all", but can just go to ContentView.
+                // Just like in TransactionList
+            NavigationView{
+                RecentTransactionList()
+            }
+            NavigationView {
             RecentTransactionList()
                 .preferredColorScheme(.dark)
+            }
         }
         .environmentObject(transactionListVM) // Passing this b/c its a separate entity from app
     }

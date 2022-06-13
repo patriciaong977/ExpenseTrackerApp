@@ -7,6 +7,11 @@
 
 import Foundation
 import Combine // for .Sink
+import Collections // for Orderered Dictionary, have to add the library
+
+// Simple way to write a dictionary [ _ : ]
+// Creating a type alias for data type - for reusability and easy to refer to.
+typealias TransactionGroup = OrderedDictionary<String, [Transaction]> // Another way to write a dictionary, elements are in the order of insertion. It also fixes the dictionary changing the months. If simple dictionary format is used, it changes from January, then February. 
 
 // Final class - prevents the class from being inherited. Can't be overwritten.
 // Observable object - turns the obj into a publisher and notify its state changes to refresh views.
@@ -73,4 +78,14 @@ final class TransactionListViewModel : ObservableObject {
         
     }
     
+    //
+    func groupTransactionsByMonth() -> TransactionGroup {
+        // Make sure that its not an empty array, if not return the empty dictionary.
+        guard !transactions.isEmpty else { return [:] }
+        
+        // Grouping transactions by month. Storing this dictionary in a constant named groupedTransactions.
+        let groupedTransactions = TransactionGroup(grouping: transactions) { $0.month }
+        
+        return groupedTransactions
+    }
 }

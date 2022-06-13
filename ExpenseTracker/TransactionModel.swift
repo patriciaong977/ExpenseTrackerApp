@@ -25,7 +25,7 @@ struct Transaction: Identifiable, Decodable, Hashable { // Identifiable - automa
     var isExpense: Bool
     var isEdited: Bool
     
-    
+    // Below are the following Computed Properties:
     // Establish a computed property for the transaction date.
     // Computed property - provides a getter and an optional setter to indirectly access other properties and values.
     var dateParsed: Date {
@@ -51,6 +51,12 @@ struct Transaction: Identifiable, Decodable, Hashable { // Identifiable - automa
         
         // If not,
         return .question
+    }
+    
+    // Month Computed Property, String type
+    var month: String {
+        // Returns a value from dateParsed.
+        dateParsed.formatted(.dateTime.year().month(.wide))
     }
     
 }
