@@ -2,6 +2,8 @@ This project is my effort to learn more about swift and ios development by follo
 https://www.youtube.com/watch?v=Bu6fAlltatA
 by DesignCode. 
 
+I' am following along the tutorial, learning more about different swiftui practices. 
+
 -----
 
 # ExpenseTrackerApp
