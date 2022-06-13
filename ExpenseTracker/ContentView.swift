@@ -6,8 +6,12 @@
 //
 
 import SwiftUI
+import SwiftUICharts // For the charts.
 
 struct ContentView: View {
+    // Demo data for the line chart
+    var demoData: [Double] = [8, 2, 4, 6, 12, 9, 2]
+    
     var body: some View {
         NavigationView {
             
@@ -17,6 +21,11 @@ struct ContentView: View {
                     Text("Overview")
                         .font(.title2)
                         .bold()
+                    
+                    // Chart
+                    LineChart()
+                        // Passing the data of the linechart
+                        .data(demoData)
                     
                     // Transaction List
                     RecentTransactionList()
