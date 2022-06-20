@@ -23,9 +23,15 @@ struct ContentView: View {
                         .bold()
                     
                     // Chart
-                    LineChart()
+                    CardView {
                         // Passing the data of the linechart
-                        .data(demoData)
+                        LineChart()
+                    }
+                    .data(demoData)
+                    .chartStyle(ChartStyle(backgroundColor: Color.SystemBackground, foregroundColor: ColorGradient(Color.icon.opacity(0.4), Color.icon)))
+                    .frame(height: 300)
+                        
+                    
                     
                     // Transaction List
                     RecentTransactionList()
