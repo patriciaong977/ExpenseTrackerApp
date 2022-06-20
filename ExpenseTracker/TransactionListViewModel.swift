@@ -11,7 +11,10 @@ import Collections // for Orderered Dictionary, have to add the library
 
 // Simple way to write a dictionary [ _ : ]
 // Creating a type alias for data type - for reusability and easy to refer to.
-typealias TransactionGroup = OrderedDictionary<String, [Transaction]> // Another way to write a dictionary, elements are in the order of insertion. It also fixes the dictionary changing the months. If simple dictionary format is used, it changes from January, then February. 
+typealias TransactionGroup = OrderedDictionary<String, [Transaction]> // Another way to write a dictionary, elements are in the order of insertion. It also fixes the dictionary changing the months. If simple dictionary format is used, it changes from January, then February.
+
+// Prefix sum - record of cumulative sums. 
+typealias TransactionPrefixSum = [(String, Double)] // String = Date, Double = amount
 
 // Final class - prevents the class from being inherited. Can't be overwritten.
 // Observable object - turns the obj into a publisher and notify its state changes to refresh views.
@@ -88,4 +91,33 @@ final class TransactionListViewModel : ObservableObject {
         
         return groupedTransactions
     }
+    
+    // Method to accumulate the transactions, return in the form of TransactionPrefixSum
+    func accumulateTransactions() -> TransactionPrefixSum {
+        print("accumulatetTransactions")
+        guard !transactions.isEmpty else { return [] }
+        
+        //
+        let today = "02/17/2022".dateParsed() // Date
+        let dateInterval = Calendar.current.dateInterval(of: .month, for: today)!
+        print("dateInterval", dateInterval)
+        
+        var sum: Double = .zero // Single value
+        var cumulativeSum = TransactionPrefixSum() // Set of values
+        
+        //
+        for date in stride(from: dateInterval.start, to: today, by: 60 * 60 * 24) {
+            let dailyExpenses = transactions.filter { $0.dateParsed == date && $0.isExpense }
+            let dailyTotal = dailyExpenses.reduce(0) { $0 - $1.signedAmount }
+            
+            // Add the daily total to the sum
+            sum += dailyTotal
+            sum = sum.roundedTo2Digits()
+            cumulativeSum.append((date.formatted(), sum))
+            print(date.formatted(), "dailyTotal:", dailyTotal, "sum:", sum)
+        }
+        
+        return cumulativeSum
+    }
 }
+

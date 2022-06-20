@@ -9,8 +9,10 @@ import SwiftUI
 import SwiftUICharts // For the charts.
 
 struct ContentView: View {
+    @EnvironmentObject var transactionListVM: TransactionListViewModel
+    
     // Demo data for the line chart
-    var demoData: [Double] = [8, 2, 4, 6, 12, 9, 2]
+    // var demoData: [Double] = [8, 2, 4, 6, 12, 9, 2]
     
     var body: some View {
         NavigationView {
@@ -23,16 +25,25 @@ struct ContentView: View {
                         .bold()
                     
                     // Chart
-                    CardView {
-                        // Passing the data of the linechart
-                        LineChart()
+                    let data = transactionListVM.accumulateTransactions()
+                    
+                    //
+                    if !data.isEmpty {
+                        let totalExpenses = data.last?.1 ?? 0
+                        CardView {
+                            VStack(alignment: .leading) { // Added because the def is in a ZStack.
+                            // Passing the data of the linechart
+                                ChartLabel(totalExpenses.formatted(.currency(code: "USD")), type: .title, format: "$%.02f")
+                            LineChart()
+                            }
+                            .background(Color.SystemBackground) // Added due to CardView on darkmode.
+                        }
+                        .data(data)
+                        .chartStyle(ChartStyle(backgroundColor: Color.SystemBackground, foregroundColor: ColorGradient(Color.icon.opacity(0.4), Color.icon)))
+                        .frame(height: 300)
                     }
-                    .data(demoData)
-                    .chartStyle(ChartStyle(backgroundColor: Color.SystemBackground, foregroundColor: ColorGradient(Color.icon.opacity(0.4), Color.icon)))
-                    .frame(height: 300)
-                        
                     
-                    
+                   
                     // Transaction List
                     RecentTransactionList()
                 }
